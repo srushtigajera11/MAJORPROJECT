@@ -73,3 +73,11 @@ module.exports.destroy = async (req,res)=>{
     console.log(list);
     res.redirect("/listing");
  };
+
+ module.exports.privacy = (req,res)=>{
+    res.render("listing/privacy.ejs");
+ };
+
+ module.exports.terms = (req,res)=>{
+    res.render("listing/terms.ejs");            
+    };

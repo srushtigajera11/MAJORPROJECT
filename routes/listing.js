@@ -34,4 +34,10 @@ router
     isOwner,
     wrapAsync( listingController.edit)
  );
+ 
+ //privacy policy
+ router.get("/privacy",listingController.privacy);
  module.exports = router;
+
+ //Terms
+   router.get("/terms",listingController.terms);   
