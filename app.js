@@ -19,6 +19,7 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewsRouter =   require("./routes/review.js");
 const userRouter = require("./routes/user.js");
+const staticRoutes = require("./routes/static"); // Import the static routes file
 
 
 app.use(express.json()); 
@@ -93,6 +94,7 @@ app.use((req,res,next)=>{
 app.use("/listing",listingRouter);
 app.use("/listing/:id/reviews",reviewsRouter);
 app.use("/",userRouter);
+app.use(staticRoutes);
 
 
 app.all("*",(req,res,next)=>{
