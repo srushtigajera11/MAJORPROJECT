@@ -79,5 +79,5 @@ module.exports.destroy = async (req,res)=>{
  };
 
  module.exports.terms = (req,res)=>{
-    res.render("listing/terms.ejs");            
+    res.render("listing/Terms.ejs");            
     };
