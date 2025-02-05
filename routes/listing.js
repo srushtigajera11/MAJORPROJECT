@@ -18,7 +18,23 @@ router
     
     //new route
  router.get("/new", IsloggedIn,listingController.newForm);
+ //search route 
+ router.get("/search", wrapAsync(async (req, res) => {
+ 
+   const { country } = req.query;
+   if (!country) {
+       return res.redirect("/listing");
+   }
 
+   // Fetch listings where 'country' matches the user input (case insensitive)
+   const filteredListings = await Listing.find({
+       country: { $regex: new RegExp(country, "i") }
+   });
+
+   res.render("listing/index", { allListing: filteredListings });
+
+})
+);
 router
     .route("/:id")
     .get(wrapAsync(listingController.show))
@@ -35,21 +51,5 @@ router
     wrapAsync( listingController.edit)
  );
 
- //search route 
- router.get("/search", wrapAsync(async (req, res) => {
- 
-       const { country } = req.query;
-       if (!country) {
-           return res.redirect("/listings");
-       }
 
-       // Fetch listings where 'country' matches the user input (case insensitive)
-       const filteredListings = await Listing.find({
-           country: { $regex: new RegExp(country, "i") }
-       });
-
-       res.render("listings/index", { allListing: filteredListings });
-    
-})
-);
  module.exports = router;
