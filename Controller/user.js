@@ -1,4 +1,8 @@
 const User = require("../models/user.js"); 
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
+
 module.exports.signupForm = (req, res) => {
     res.render("users/signup.ejs");
 };
@@ -42,4 +46,105 @@ module.exports.logout = (req, res, next) => {
         req.flash("success", "You are logged out");
         res.redirect("/listing");
     });
+};
+
+
+
+// Nodemailer Configuration
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: "your-email@gmail.com",
+        pass: "your-email-password",
+    }
+});
+
+// Render Forgot Password Form
+module.exports.renderForgotPasswordForm = (req, res) => {
+    res.render("users/forgetPwd", { message: null });
+};
+
+// Handle Forgot Password Request
+module.exports.handleForgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            req.flash("error", "No account found with that email.");
+            return res.redirect("/forgot-password");
+        }
+
+        // Generate Reset Token
+        const token = crypto.randomBytes(32).toString("hex");
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
+        await user.save();
+
+        // Generate Reset Link
+        const resetLink = `https://${req.headers.host}/reset-password/${token}`;
+
+        // Send Email
+        const mailOptions = {
+            from: "your-email@gmail.com",
+            to: user.email,
+            subject: "Password Reset Request",
+            text: `Click the link to reset your password: ${resetLink}`
+        };
+
+        transporter.sendMail(mailOptions, (err) => {
+            if (err) {
+                console.error(err);
+                req.flash("error", "Error sending reset email.");
+                return res.redirect("/forgot-password");
+            }
+            req.flash("success", "Password reset link sent to your email.");
+            res.redirect("/forgot-password");
+        });
+
+    } catch (error) {
+        req.flash("error", "Something went wrong. Try again.");
+        res.redirect("/forgot-password");
+    }
+};
+
+// Render Reset Password Form
+module.exports.renderResetPasswordForm = async (req, res) => {
+    const { token } = req.params;
+    const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+
+    if (!user) {
+        req.flash("error", "Invalid or expired reset token.");
+        return res.redirect("/forgot-password");
+    }
+
+    res.render("users/resetPwd", { token });
+};
+
+// Handle Reset Password Submission
+module.exports.handleResetPassword = async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+        const user = await User.findOne({ resetPasswordToken: token, resetPasswordExpires: { $gt: Date.now() } });
+
+        if (!user) {
+            req.flash("error", "Invalid or expired reset token.");
+            return res.redirect("/forgot-password");
+        }
+
+        // Hash New Password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        req.flash("success", "Password reset successful! You can now log in.");
+        res.redirect("/login");
+
+    } catch (error) {
+        req.flash("error", "Something went wrong. Try again.");
+        res.redirect("/forgot-password");
+    }
 };

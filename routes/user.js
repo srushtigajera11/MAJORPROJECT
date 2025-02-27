@@ -13,5 +13,14 @@ router.route("/login")
     .post(passport.authenticate("local" , {faliureRedirect : '/login' , failureFlash:true}),userController.login);
 
 router.get("/logout", userController.logout);
+ 
+//forgot password
+router.route("/forgot-password")
+    .get(userController.renderResetPasswordForm)
+    .post(wrapAsync(userController.handleResetPassword));
+
+    router.route("/reset-password/:token")
+    .get(userController.renderResetPasswordForm)
+    .post(wrapAsync(userController.handleResetPassword));
 
 module.exports = router;
