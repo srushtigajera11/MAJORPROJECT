@@ -297,7 +297,7 @@ const sampleListings = [
       },
       price: 2000,
       location: "Tokyo",
-      country: "Japan",
+      country: "Tokyo",
     },
     {
       title: "Lakefront Cabin in New Hampshire",
