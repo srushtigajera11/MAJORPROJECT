@@ -16,8 +16,9 @@ router.get("/logout", userController.logout);
  
 //forgot password
 router.route("/forgot-password")
-    .get(userController.renderResetPasswordForm)
-    .post(wrapAsync(userController.handleResetPassword));
+    router.get("/forgot-password", userController.renderForgotPasswordForm);
+    router.post("/forgot-password", wrapAsync(userController.handleForgotPassword));
+
 
     router.route("/reset-password/:token")
     .get(userController.renderResetPasswordForm)
