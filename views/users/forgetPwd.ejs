@@ -36,10 +36,10 @@
             <p class="text-muted text-center">Enter your email to receive a reset link.</p>
 
             <% if (messages.error.length > 0) { %>
-                <div class="alert alert-danger text-center"><%= messages.error %></div>
+                <div class="alert alert-danger text-center"><%= messages.error[0] %></div>
             <% } %>
             <% if (messages.success.length > 0) { %>
-                <div class="alert alert-success text-center"><%= messages.success %></div>
+                <div class="alert alert-success text-center"><%= messages.success[0] %></div>
             <% } %>
 
             <form action="/forgot-password" method="POST">

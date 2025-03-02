@@ -78,7 +78,7 @@ module.exports.handleForgotPassword = async (req, res) => {
 
         if (!user) {
             req.flash("error", "No account found with that email.");
-            return res.render("/forgot-password");
+            return res.redirect("/forgot-password");
         }
 
         // Generate Reset Token
@@ -105,12 +105,12 @@ module.exports.handleForgotPassword = async (req, res) => {
                 return res.redirect("/forgot-password");
             }
             req.flash("success", "Password reset link sent to your email.");
-            res.render("/forgot-password");
+            res.redirect("/forgot-password");
         });
 
     } catch (error) {
         req.flash("error", "Something went wrong. Try again.");
-        res.render("/forgot-password");
+       return res.redirect("/forgot-password");
     }
 };
 
