@@ -61,8 +61,14 @@ const transporter = nodemailer.createTransport({
 
 // Render Forgot Password Form
 module.exports.renderForgotPasswordForm = (req, res) => {
-    res.render("users/forgetPwd", { message: null });
+    res.render("users/forgetPwd", { 
+        messages: { 
+            error: req.flash("error"), 
+            success: req.flash("success") 
+        }
+    });
 };
+
 
 // Handle Forgot Password Request
 module.exports.handleForgotPassword = async (req, res) => {

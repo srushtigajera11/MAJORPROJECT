@@ -35,10 +35,10 @@
             <h2 class="text-center">Forgot Password</h2>
             <p class="text-muted text-center">Enter your email to receive a reset link.</p>
 
-            <% if (messages.error) { %>
+            <% if (messages.error.length > 0) { %>
                 <div class="alert alert-danger text-center"><%= messages.error %></div>
             <% } %>
-            <% if (messages.success) { %>
+            <% if (messages.success.length > 0) { %>
                 <div class="alert alert-success text-center"><%= messages.success %></div>
             <% } %>
 
