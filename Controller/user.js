@@ -2,6 +2,7 @@ const User = require("../models/user.js");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+require("dotenv").config();
 
 module.exports.signupForm = (req, res) => {
     res.render("users/signup.ejs");
