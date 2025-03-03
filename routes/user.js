@@ -14,13 +14,12 @@ router.route("/login")
 
 router.get("/logout", userController.logout);
  
-//forgot password
 router.route("/forgot-password")
-    .get("/forgot-password", userController.renderForgotPasswordForm)
-    .post("/forgot-password", wrapAsync(userController.handleForgotPassword));
+    .get(userController.renderForgotPasswordForm)  // ✅ Chained correctly
+    .post(wrapAsync(userController.handleForgotPassword));
 
-
-    router.route("/reset-password/:token")
+// Reset Password
+router.route("/reset-password/:token")
     .get(userController.renderResetPasswordForm)
     .post(wrapAsync(userController.handleResetPassword));
 
