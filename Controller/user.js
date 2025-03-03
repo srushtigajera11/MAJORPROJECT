@@ -54,8 +54,8 @@ module.exports.logout = (req, res, next) => {
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-        user: "your-email@gmail.com",
-        pass: "your-email-password",
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
     }
 });
 
@@ -92,7 +92,7 @@ module.exports.handleForgotPassword = async (req, res) => {
 
         // Send Email
         const mailOptions = {
-            from: "your-email@gmail.com",
+            from: process.env.EMAIL_USER,   
             to: user.email,
             subject: "Password Reset Request",
             text: `Click the link to reset your password: ${resetLink}`
