@@ -55,7 +55,7 @@ const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        pass: process.env.EMAIL_PASS,
     }
 });
 
@@ -74,6 +74,8 @@ module.exports.renderForgotPasswordForm = (req, res) => {
 module.exports.handleForgotPassword = async (req, res) => {
     try {
         const { email } = req.body;
+        console.log("recieved forgot password req for email : ",email);
+
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -86,9 +88,11 @@ module.exports.handleForgotPassword = async (req, res) => {
         user.resetPasswordToken = token;
         user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiry
         await user.save();
+        console.log("reset token generated : ",token);
 
         // Generate Reset Link
         const resetLink = `https://${req.headers.host}/reset-password/${token}`;
+        console.log("reset link : ",resetLink);
 
         // Send Email
         const mailOptions = {
@@ -104,11 +108,13 @@ module.exports.handleForgotPassword = async (req, res) => {
                 req.flash("error", "Error sending reset email.");
                 return res.redirect("/forgot-password");
             }
+            console.log("reset email sent successfully");
             req.flash("success", "Password reset link sent to your email.");
             res.redirect("/forgot-password");
         });
 
     } catch (error) {
+        console.error("Error in forgot password:", error);
         req.flash("error", "Something went wrong. Try again.");
        return res.redirect("/forgot-password");
     }
