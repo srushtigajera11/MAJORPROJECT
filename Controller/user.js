@@ -59,7 +59,7 @@ const transporter = nodemailer.createTransport({
     port: 465, // Use 587 if you prefer TLS
     secure: true, // True for 465, false for 587
     auth: {
-        user: 'srushtigajer113@gmail.com',
+        user: 'srushtigajera113@gmail.com',
         pass: 'pmrlqypzgduzyoej',
     },
 });
@@ -110,7 +110,7 @@ module.exports.handleForgotPassword = async (req, res) => {
 
         // Send Email
         const mailOptions = {
-            from:'srushtigajer113@gmail.com',   
+            from:'srushtigajera113@gmail.com',   
             to: user.email,
             subject: "Password Reset Request",
             text: `Click the link to reset your password: ${resetLink}`
