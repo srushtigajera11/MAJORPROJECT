@@ -96,6 +96,23 @@ app.use("/listing/:id/reviews",reviewsRouter);
 app.use("/",userRouter);
 app.use(staticRoutes);
 
+app.get("/test-email", async (req, res) => {
+    try {
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: "your-email@gmail.com", // Use your real email
+            subject: "Test Email",
+            text: "If you receive this, SMTP is working!"
+        };
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log("✅ Test Email Sent:", info);
+        res.send("Test email sent! Check your inbox.");
+    } catch (error) {
+        console.error("❌ Error sending test email:", error);
+        res.send("Error sending test email.");
+    }
+});
 
 app.all("*",(req,res,next)=>{
     next(new ExpressError(400,"page not found"));
