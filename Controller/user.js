@@ -1,8 +1,9 @@
+require("dotenv").config();
 const User = require("../models/user.js"); 
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
-require("dotenv").config();
+
 
 module.exports.signupForm = (req, res) => {
     res.render("users/signup.ejs");
@@ -50,13 +51,25 @@ module.exports.logout = (req, res, next) => {
 };
 
 
+console.log("Email:", process.env.EMAIL_USER);
+console.log("Password:", process.env.EMAIL_PASS ? "Loaded" : "Not Loaded");
 
-// Nodemailer Configuration
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465, // Use 587 if you prefer TLS
+    secure: true, // True for 465, false for 587
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
+    },
+});
+
+// ✅ TEST SMTP CONNECTION
+transporter.verify((error, success) => {
+    if (error) {
+        console.log("❌ SMTP Connection Error:", error);
+    } else {
+        console.log("✅ SMTP Server is ready to send emails!");
     }
 });
 
